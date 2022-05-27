@@ -30,10 +30,4 @@ open module dev.thihup.piranha.rest.template {
     requires smallrye.config;
     requires smallrye.config.common;
     requires smallrye.config.core;
-
-    // Bytebuddy - Workaround Jakarta Validation API bug
-    requires java.instrument;
-    requires net.bytebuddy.agent;
-    requires jdk.attach;
-
 }
