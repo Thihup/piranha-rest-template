@@ -23,8 +23,8 @@ open module dev.thihup.piranha.rest.template {
     requires cloud.piranha.extension.weld;
 
 
-    // RestEasy
-    requires resteasy.servlet.initializer;
+    // Jersey
+    requires jersey.container.servlet;
 
     // Smallrye
     requires smallrye.config;
