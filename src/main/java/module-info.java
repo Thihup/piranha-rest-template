@@ -13,15 +13,16 @@ open module dev.thihup.piranha.rest.template {
     requires jakarta.validation;
     requires jakarta.ws.rs;
 
+    uses cloud.piranha.http.api.HttpServer;
+
     // Implementations
 
     // Piranha
     requires cloud.piranha.embedded;
-    requires cloud.piranha.http.impl;
     requires cloud.piranha.http.webapp;
+    requires cloud.piranha.http.virtual;
     requires cloud.piranha.extension.herring;
     requires cloud.piranha.extension.weld;
-
 
     // Jersey
     requires jersey.container.servlet;

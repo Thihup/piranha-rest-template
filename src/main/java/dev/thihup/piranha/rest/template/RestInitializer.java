@@ -8,11 +8,11 @@ import org.glassfish.jersey.servlet.init.JerseyServletContainerInitializer;
 
 public class RestInitializer implements ServletContainerInitializer {
 
-    private final ServletContainerInitializer resteasyServletInitializer = new JerseyServletContainerInitializer();
+    private final ServletContainerInitializer restInitializer = new JerseyServletContainerInitializer();
 
     @Override
     public void onStartup(Set<Class<?>> classes, ServletContext servletContext)
         throws ServletException {
-        resteasyServletInitializer.onStartup(Set.of(RestApplication.class), servletContext);
+        restInitializer.onStartup(Set.of(RestApplication.class), servletContext);
     }
 }

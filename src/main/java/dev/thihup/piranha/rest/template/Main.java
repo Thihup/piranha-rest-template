@@ -4,18 +4,27 @@ import cloud.piranha.embedded.EmbeddedPiranha;
 import cloud.piranha.embedded.EmbeddedPiranhaBuilder;
 import cloud.piranha.extension.herring.HerringExtension;
 import cloud.piranha.extension.weld.WeldInitializer;
-import cloud.piranha.http.impl.DefaultHttpServer;
-import cloud.piranha.http.webapp.HttpWebApplicationServerProcessor;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public final class Main {
+public class Main {
+
+    private static final Runtime RUNTIME = Runtime.getRuntime();
 
     public static void main(String[] args) {
-        EmbeddedPiranha piranha = new EmbeddedPiranhaBuilder()
+        Supplier<EmbeddedPiranha> startup = () -> new EmbeddedPiranhaBuilder()
             .initializers(RestInitializer.class, WeldInitializer.class)
             .extensions(HerringExtension.class)
             .buildAndStart();
-        var httpProcessor = new HttpWebApplicationServerProcessor(piranha);
-        var httpServer = new DefaultHttpServer(8080, httpProcessor, false);
-        httpServer.start();
+
+        Consumer<EmbeddedPiranha> shutdownHook = piranha -> RUNTIME.addShutdownHook(
+            Thread.ofPlatform().unstarted(() -> piranha.stop().destroy()));
+
+        new Thread(() -> CompletableFuture.supplyAsync(startup, Executors.newSingleThreadExecutor(Thread.ofPlatform()
+            .name("Piranha-Startup")
+            .daemon(false)
+            .factory())).thenAccept(shutdownHook)).start();
     }
 }
